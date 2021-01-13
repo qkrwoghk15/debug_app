@@ -11,14 +11,14 @@ class TabPanel extends React.Component {
         movies: []
     };
     getMovies = async () => {
-    const {
-        data: {
-        data: { movies }
-        }
-    } = await axios.get(
-        "https://yts-proxy.now.sh/list_movies.json?sort_by=rating"
-    );
-        this.setState({ movies, isLoading: false });
+        const {
+            data: {
+                data: { movies }
+            }
+        } = await axios.get(
+            "https://yts-proxy.now.sh/list_movies.json?sort_by=rating"
+        );
+            this.setState({ movies, isLoading: false });
     };
     componentDidMount() {
         this.getMovies();
@@ -34,12 +34,13 @@ class TabPanel extends React.Component {
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
-            style={{width:'100%', height: '100%', backgroundColor:'white', color: 'black', paddingLeft: '8%'}}
+            style={{width:'100%', height: '100%', backgroundColor:'white', color: 'black', paddingLeft: '4%'}}
             {...other}
         >
             {value === index && (
             <Box p={3}>
                 <Typography>{children}</Typography>
+
                 <section className="container">
                     {isLoading ? (
                     <div className="loader">
@@ -61,23 +62,6 @@ class TabPanel extends React.Component {
                     </div>
                     )}
                 </section>
-
-                <Typography>wefwakejf;lawkejfkwjawkzasjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-                <Typography>wefwakejf;lawkejfkwjawkjefaw</Typography>
-
             </Box>
             )}
         </div>

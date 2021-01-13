@@ -6,7 +6,7 @@ import "./Movie.css";
 function Movie({ id, year, title, summary, poster, genres }) {
   return (
     <div className="movie">
-      <Link
+      <div
         to={{
           pathname: `/movie/${id}`,
           state: {
@@ -31,7 +31,7 @@ function Movie({ id, year, title, summary, poster, genres }) {
           </ul>
           <p className="movie__summary">{summary.slice(0, 180)}...</p>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }
