@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -41,6 +41,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CustomizedTabs(props) {
   const classes = useStyles();
+  const [windowWidth,setWindowWidth] = useState(window.innerWidth)
+
+  function handleResize(e){
+    setWindowWidth(window.innerWidth)
+  }
 
   function a11yProps(index) {
     return {
@@ -48,6 +53,10 @@ export default function CustomizedTabs(props) {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
+
+  useEffect(()=>{
+    window.addEventListener('resize', handleResize);
+  })
 
   return (
     <div className={classes.root}>
@@ -57,7 +66,7 @@ export default function CustomizedTabs(props) {
           variant = "scrollable"
           scrollButtons="auto"
           aria-label="styled tabs"
-          style={{width: `calc(${window.innerWidth}*0.6px)`}}
+          style={{width: `calc(${windowWidth}*0.6px)`}}
         >
           <StyledTab label="car1" {...a11yProps(0)} />
           <StyledTab label="car2" {...a11yProps(1)} />
