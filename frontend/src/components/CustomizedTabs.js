@@ -74,8 +74,6 @@ export default function CustomizedTabs(props) {
           <StyledTab label="car4" {...a11yProps(3)} />
           <StyledTab label="car5" {...a11yProps(4)} />
           <StyledTab label="car6" {...a11yProps(5)} />
-          <StyledTab label="car7" {...a11yProps(6)} />
-          <StyledTab label="car8" {...a11yProps(7)} />
         </StyledTabs>
     </div>
   );

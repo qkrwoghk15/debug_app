@@ -19,13 +19,22 @@ class Contents extends React.Component {
                 </SwipeableDrawer>
                 
                 <TabPanel value={this.props.value} index={0}>
-                    Item One
+                    {/* Item One */}
                 </TabPanel>
                 <TabPanel value={this.props.value} index={1}>
-                    Item Two
+                    {/* Item Two */}
                 </TabPanel>
                 <TabPanel value={this.props.value} index={2}>
-                    Item Three
+                    {/* Item Three */}
+                </TabPanel>
+                <TabPanel value={this.props.value} index={3}>
+                    {/* Item Three */}
+                </TabPanel>
+                <TabPanel value={this.props.value} index={4}>
+                    {/* Item Three */}
+                </TabPanel>
+                <TabPanel value={this.props.value} index={5}>
+                    {/* Item Three */}
                 </TabPanel>
             </div>
         );

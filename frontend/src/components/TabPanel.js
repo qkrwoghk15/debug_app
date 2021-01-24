@@ -2,32 +2,41 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import axios from 'axios'
-import Movie from "./Movie";
+//import axios from 'axios'
+import Car from "./Car";
 
 class TabPanel extends React.Component {
     state = {
         isLoading: true,
-        movies: []
+        cars: [],
     };
-    getMovies = async () => {
-        const {
-            data: {
-                data: { movies }
-            }
-        } = await axios.get(
-            "https://yts-proxy.now.sh/list_movies.json?sort_by=rating"
-        );
-            this.setState({ movies, isLoading: false });
+
+    getCars = async () => {
+        // const {
+        //     data: {
+        //         data: { cars }
+        //     }
+        // } = await axios.get(
+        //     "https://yts-proxy.now.sh/list_cars.json?sort_by=rating"
+        // );
+        // this.setState({ cars, isLoading: false });
+        try {
+            const res = await fetch('http://127.0.0.1:8000/api/');
+            const cars = await res.json();
+            this.setState({ cars : cars, isLoading: false });
+        } catch (e) {
+            console.log(e);
+        }
     };
-    componentDidMount() {
-        this.getMovies();
+
+    async componentDidMount() {
+        this.getCars();
     }
 
     render() {
         const { children, value, index, ...other } = this.props;
-        const { isLoading, movies } = this.state;
-
+        const { isLoading, cars } = this.state;
+        console.log(cars)
         return (
         <div
             role="tabpanel"
@@ -38,31 +47,33 @@ class TabPanel extends React.Component {
             {...other}
         >
             {value === index && (
-            <Box p={3}>
-                <Typography>{children}</Typography>
+                <Box p={3}>
+                    <Typography>{children}</Typography>
 
-                <section className="container">
-                    {isLoading ? (
-                    <div className="loader">
-                        <span className="loader__text">Loading...</span>
-                    </div>
-                    ) : (
-                    <div className="movies">
-                        {movies.map(movie => (
-                        <Movie
-                            key={movie.id}
-                            id={movie.id}
-                            year={movie.year}
-                            title={movie.title}
-                            summary={movie.summary}
-                            poster={movie.medium_cover_image}
-                            genres={movie.genres}
-                        />
-                        ))}
-                    </div>
-                    )}
-                </section>
-            </Box>
+                    <section className="container">
+                        {isLoading ? (
+                        <div className="loader">
+                            <span className="loader__text">Loading...</span>
+                        </div>
+                        ) : (
+                        <div className="cars">
+                            {cars.map(car => (
+                                <Car
+                                    key={car.id}
+                                    id={car.id}
+                                    year="2021" //
+                                    // title={car.title}
+                                    // summary={car.summary}
+                                    // poster={car.medium_cover_image}
+                                    title = {car.original_video}
+                                    poster = {car.frameImgs}
+                                    summary = {car.upload_at}
+                                />
+                            ))}
+                        </div>
+                        )}
+                    </section>
+                </Box>
             )}
         </div>
         );
