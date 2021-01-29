@@ -14,6 +14,7 @@ import {
     useScrollTrigger,
     Zoom,
     Fab,
+    SwipeableDrawer,
 } from '@material-ui/core';
 import { 
     Menu as MenuIcon, 
@@ -21,6 +22,7 @@ import {
     KeyboardArrowUp as KeyboardArrowUpIcon,
     // MoreVert as MoreIcon 
 } from '@material-ui/icons';
+import ConditionDrawer from "./ConditionDrawer"
 import CustomizedTabs from "./CustomizedTabs"
 
 const styles = (theme) => ({
@@ -105,12 +107,18 @@ ScrollTop.propTypes = {
 class TitleBar extends React.Component {
     state = {
         fileName: '',
-        // drawerOpen: false,
+        drawerOpen: false,
     }
     handleChange = (e) => {
         this.setState({
             fileName: e.target.value
         })
+    }
+    handleToggleDrawer = (open) => (e) => {
+        if (e && e.type === 'keydown' && (e.key === 'Tab' || e.key === 'Shift')) {
+            return;
+        }
+        this.setState({ drawerOpen: open });
     }
 
     render(){
@@ -163,7 +171,7 @@ class TitleBar extends React.Component {
                                             edge="start"
                                             color="inherit"
                                             aria-label="open drawer"
-                                            onClick={this.props.handleToggleDrawer(true)}
+                                            onClick={this.handleToggleDrawer(true)}
                                         >
                                             <MenuIcon />
                                         </IconButton>
@@ -183,6 +191,15 @@ class TitleBar extends React.Component {
                     </Toolbar>
                 </AppBar>
                 
+                <SwipeableDrawer
+                    anchor='right'
+                    open={this.state.drawerOpen}
+                    onClose={this.handleToggleDrawer(false)}
+                    onOpen={this.handleToggleDrawer(true)}
+                >
+                    <ConditionDrawer toggleDrawer = {this.handleToggleDrawer} video = {this.state.fileName}></ConditionDrawer>
+                </SwipeableDrawer>
+
                 <ScrollTop {...this.props}>
                     <Fab color="secondary" size="small" aria-label="scroll back to top">
                         <KeyboardArrowUpIcon />

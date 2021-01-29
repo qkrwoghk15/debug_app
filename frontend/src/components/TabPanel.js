@@ -36,7 +36,7 @@ class TabPanel extends React.Component {
     render() {
         const { children, value, index, ...other } = this.props;
         const { isLoading, cars } = this.state;
-        console.log(cars)
+        
         return (
         <div
             role="tabpanel"
@@ -49,7 +49,6 @@ class TabPanel extends React.Component {
             {value === index && (
                 <Box p={3}>
                     <Typography>{children}</Typography>
-
                     <section className="container">
                         {isLoading ? (
                         <div className="loader">
@@ -61,13 +60,10 @@ class TabPanel extends React.Component {
                                 <Car
                                     key={car.id}
                                     id={car.id}
-                                    year="2021" //
-                                    // title={car.title}
-                                    // summary={car.summary}
-                                    // poster={car.medium_cover_image}
+                                    year="2021"
                                     title = {car.original_video}
-                                    poster = {car.frameImgs}
                                     summary = {car.upload_at}
+                                    poster = {car.frameImgs}
                                 />
                             ))}
                         </div>

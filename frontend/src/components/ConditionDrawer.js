@@ -14,6 +14,8 @@ import {
 import { 
     ExpandMore as ExpandMoreIcon    
 } from '@material-ui/icons';
+import {Player} from 'video-react';
+//import "../../node_modules/video-react/dist/video-react.css";
 
 const styles = (theme)=>({
     root: {
@@ -67,6 +69,7 @@ class ConditionDrawer extends React.Component{
     render(){
         const { classes } = this.props;
         const { expanded } = this.state;
+        console.log(this.props.video)
         return(
             <div className={classes.root}>
                 <Accordion defaultExpanded expanded = {expanded === 'panel1'} onChange={this.handleChange('panel1')}>
@@ -141,6 +144,11 @@ class ConditionDrawer extends React.Component{
                     </AccordionActions>
                 </Accordion>
                 <Divider />
+                <Player
+                    playsInline
+                    poster=""
+                    src={this.props.video}
+                />
             </div>
         );
     }

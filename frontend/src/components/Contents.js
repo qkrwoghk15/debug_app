@@ -1,23 +1,10 @@
 import React from "react";
-import { 
-    SwipeableDrawer,
-} from '@material-ui/core';
-import ConditionDrawer from "./ConditionDrawer"
 import TabPanel from "./TabPanel"
 
 class Contents extends React.Component {
     render(){
         return (
-            <div style={{marginTop:'140px', padding:'10px'}}>
-                <SwipeableDrawer
-                    anchor='right'
-                    open={this.props.drawerOpen}
-                    onClose={this.props.handleToggleDrawer(false)}
-                    onOpen={this.props.handleToggleDrawer(true)}
-                >
-                    <ConditionDrawer toggleDrawer = {this.props.handleToggleDrawer}></ConditionDrawer>
-                </SwipeableDrawer>
-                
+            <div style={{marginTop:'140px', padding:'10px'}}>            
                 <TabPanel value={this.props.value} index={0}>
                     {/* Item One */}
                 </TabPanel>

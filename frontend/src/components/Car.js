@@ -4,20 +4,8 @@ import PropTypes from "prop-types";
 import "./Car.css";
 
 function Car({ id, year, title, summary, poster}) {
-  console.log(poster)
   return (
     <div className="car">
-      <div
-        to={{
-          pathname: `/car/${id}`,
-          state: {
-            year,
-            title,
-            summary,
-            poster,
-          }
-        }}
-      >
         <img src={poster} alt={title} title={title} />
         <div className="car__data">
           <h3 className="car__title">{title}</h3>
@@ -31,7 +19,6 @@ function Car({ id, year, title, summary, poster}) {
           </ul> */}
           <p className="car__summary">{summary.slice(0, 180)}...</p>
         </div>
-      </div>
     </div>
   );
 }
