@@ -5,5 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', views.ListApi.as_view()),
+    path('create/', views.CreateApi.as_view()),
     path('<int:pk>/', views.DetailApi.as_view()),
+    path('<int:pk>/update/', views.UpdateApi.as_view()),
 ]

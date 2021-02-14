@@ -24,6 +24,7 @@ import {
 } from '@material-ui/icons';
 import ConditionDrawer from "./ConditionDrawer"
 import CustomizedTabs from "./CustomizedTabs"
+import { ApiCreate } from '../api/api';
 
 const styles = (theme) => ({
     root: {
@@ -111,8 +112,9 @@ class TitleBar extends React.Component {
     }
     handleChange = (e) => {
         this.setState({
-            fileName: e.target.value
+            fileName: e.target.value.split('\\').slice(-1)
         })
+        ApiCreate(this.state.fileName)
     }
     handleToggleDrawer = (open) => (e) => {
         if (e && e.type === 'keydown' && (e.key === 'Tab' || e.key === 'Shift')) {
@@ -135,7 +137,7 @@ class TitleBar extends React.Component {
                                         Debug
                                     </Typography>
                                     <Typography  variant="subtitle2" className={classes.subtitle} noWrap>
-                                        debug your app
+                                        debuging Car Re-identification
                                     </Typography>
                                 </Box>
 
@@ -180,12 +182,6 @@ class TitleBar extends React.Component {
                                 <Box flexGrow={1}>
                                     <CustomizedTabs handleTabChange = {this.props.handleTabChange} value = {this.props.value}></CustomizedTabs>
                                 </Box>
-                                
-                                {/* <Box>
-                                    <IconButton aria-label="display more actions" edge="end" color="inherit">
-                                        <MoreIcon />
-                                    </IconButton>
-                                </Box> */}
                             </Box>
                         </Box>
                     </Toolbar>

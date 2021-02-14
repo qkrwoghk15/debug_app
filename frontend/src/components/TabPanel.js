@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-//import axios from 'axios'
 import Car from "./Car";
+
+import { ApiList } from '../api/api';
 
 class TabPanel extends React.Component {
     state = {
@@ -11,26 +12,13 @@ class TabPanel extends React.Component {
         cars: [],
     };
 
-    getCars = async () => {
-        // const {
-        //     data: {
-        //         data: { cars }
-        //     }
-        // } = await axios.get(
-        //     "https://yts-proxy.now.sh/list_cars.json?sort_by=rating"
-        // );
-        // this.setState({ cars, isLoading: false });
-        try {
-            const res = await fetch('http://127.0.0.1:8000/api/');
-            const cars = await res.json();
-            this.setState({ cars : cars, isLoading: false });
-        } catch (e) {
-            console.log(e);
-        }
+    _getCars = async () => {
+        const {data} = await ApiList()
+        this.setState({ cars: data, isLoading: false });
     };
 
     async componentDidMount() {
-        this.getCars();
+        this._getCars();
     }
 
     render() {

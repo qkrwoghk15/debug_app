@@ -14,8 +14,7 @@ import {
 import { 
     ExpandMore as ExpandMoreIcon    
 } from '@material-ui/icons';
-import {Player} from 'video-react';
-//import "../../node_modules/video-react/dist/video-react.css";
+import ReactPlayer from 'react-player'
 
 const styles = (theme)=>({
     root: {
@@ -144,40 +143,10 @@ class ConditionDrawer extends React.Component{
                     </AccordionActions>
                 </Accordion>
                 <Divider />
-                <Player
-                    playsInline
-                    poster=""
-                    src={this.props.video}
-                />
+                <ReactPlayer url={this.props.video} />
             </div>
         );
     }
 }
 
 export default withStyles(styles, { withTheme: true })(ConditionDrawer);
-
-//List,
-//ListItem,
-//ListItemIcon,
-//ListItemText,
-
-//MoveToInbox as InboxIcon,
-//Mail as MailIcon,
-//<List>
-
-//<div
-//className={classes.list}
-//role="presentation"
-//onClick={this.props.toggleDrawer(false)}
-//onKeyDown={this.props.toggleDrawer(false)}
-//>
-//{['Result'].map((text, index) => (
-        //<ListItem button key={text}>
-        //<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-        //<ListItemText primary={text} />
-        //</ListItem>
-    //))}
-//<Divider />
-//</div>
-    
-//</List>

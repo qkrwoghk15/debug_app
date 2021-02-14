@@ -13,3 +13,11 @@ class ListApi(generics.ListCreateAPIView):
 class DetailApi(generics.RetrieveUpdateDestroyAPIView):
     queryset = Api.objects.all()
     serializer_class = ApiSerializer
+
+class CreateApi(generics.CreateAPIView):
+    queryset = Api.objects.all()
+    serializer_class = ApiSerializer
+
+class UpdateApi(generics.UpdateAPIView):
+    queryset = Api.objects.all()
+    serializer_class = ApiSerializer
