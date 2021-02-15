@@ -21,3 +21,9 @@ class CreateApi(generics.CreateAPIView):
 class UpdateApi(generics.UpdateAPIView):
     queryset = Api.objects.all()
     serializer_class = ApiSerializer
+
+#Form
+#https://www.bogotobogo.com/python/Django/Python_Django_Image_Files_Uploading_Example.php
+
+#CharField
+#https://www.valentinog.com/blog/drf/

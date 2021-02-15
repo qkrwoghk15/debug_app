@@ -27,15 +27,15 @@ def get_image_filename(instance, filename):
     return "images/%s" % (id) 
 
 class Api(models.Model):
-    original_video = models.FileField(upload_to='video/', null = False, default='')
-    labeld_video = models.FileField(upload_to='video/', blank = True, default=None)
-    count = models.FileField(upload_to='text/', blank = True, default=None)
-    tracklet = models.FileField(upload_to='text/', null = True, default = get_txt_file (settings.MEDIA_ROOT,'/text/_tracklet.txt'))
-    vehicle = models.FileField(upload_to='text/', null = True, default = get_txt_file(settings.MEDIA_ROOT, '/text/_vehicle.txt'))
+    original_video = models.CharField(max_length=100, null = False, default='')
+    #labeld_video = models.FileField(upload_to='video/', blank = True, default=None)
+    #count = models.FileField(upload_to='text/', null = True, blank = True,  default=None)
+    #tracklet = models.FileField(upload_to='text/', null = True, blank = True, default = get_txt_file (settings.MEDIA_ROOT,'/text/_tracklet.txt'))
+    #vehicle = models.FileField(upload_to='text/', null = True, blank = True, default = get_txt_file(settings.MEDIA_ROOT, '/text/_vehicle.txt'))
     upload_at = models.DateTimeField(auto_now_add=True)
 
-    def video_file_name(self):
-        return os.path.basename(self.original_video.name)
+    #def video_file_name(self):
+    #    return os.path.basename(self.original_video.name)
 
     def __str__(self):
         """A string representation of the model."""
