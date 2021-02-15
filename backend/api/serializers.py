@@ -30,3 +30,18 @@ class ApiSerializer(serializers.ModelSerializer):
             ApiImages.objects.create(api=api, image=image_data)
         return api
 
+class ApiCreateSerializer(serializers.ModelSerializer):
+    images = ApiImagesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Api
+        fields = [
+            'original_video',
+        ]
+    
+    def create(self, validated_data):
+        images_data = self.context['request'].FILES
+        api = Api.objects.create(**validated_data)
+        for image_data in images_data.getlist('image'):
+            ApiImages.objects.create(api=api, image=image_data)
+        return api

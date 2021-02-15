@@ -44,7 +44,7 @@ class TabPanel extends React.Component {
                         </div>
                         ) : (
                         <div className="cars">
-                            {cars.map(car => (
+                            {cars.map(car => 
                                 <Car
                                     key={car.id}
                                     id={car.id}
@@ -53,7 +53,7 @@ class TabPanel extends React.Component {
                                     summary = {car.upload_at}
                                     poster = {car.frameImgs}
                                 />
-                            ))}
+                            )}
                         </div>
                         )}
                     </section>

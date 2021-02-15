@@ -114,7 +114,7 @@ class TitleBar extends React.Component {
         this.setState({
             fileName: e.target.value.split('\\').slice(-1)
         })
-        ApiCreate(this.state.fileName)
+        //ApiCreate(this.state.fileName)
     }
     handleToggleDrawer = (open) => (e) => {
         if (e && e.type === 'keydown' && (e.key === 'Tab' || e.key === 'Shift')) {

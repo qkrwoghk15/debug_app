@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics
 
 from .models import Api
-from .serializers import ApiSerializer
+from .serializers import ApiSerializer, ApiCreateSerializer
 
 class ListApi(generics.ListCreateAPIView):
     queryset = Api.objects.all()
@@ -16,7 +16,7 @@ class DetailApi(generics.RetrieveUpdateDestroyAPIView):
 
 class CreateApi(generics.CreateAPIView):
     queryset = Api.objects.all()
-    serializer_class = ApiSerializer
+    serializer_class = ApiCreateSerializer
 
 class UpdateApi(generics.UpdateAPIView):
     queryset = Api.objects.all()
