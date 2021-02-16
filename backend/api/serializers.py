@@ -1,47 +1,32 @@
 # JSON으로 데이터를 직렬화(Serialize)해주기 위해 만든 파일
 from rest_framework import serializers
-from .models import Api, ApiImages
+from .models import Api, Car, CarImages
 
-class ApiImagesSerializer(serializers.ModelSerializer):
+class CarImagesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ApiImages
-        fields = ['image']
+        model = CarImages
+        fields = ('car_id', 'frame', 'x', 'y', 'width', 'height', 'car_type', 'confidence', 'image')
+
+class CarSerializer(serializers.ModelSerializer):
+    images = CarImagesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Car
+        fields = ( 'car_id', 'api', 'begin_frame', 'exit_frame', 'car_type', 'images')
+
+    def create(self, validated_data):
+        images_data = self.context['request'].FILES
+        car = Car.objects.create(**validated_data)
+        for image_data in images_data.getlist('image'):
+            CarImages.objects.create(car_id=car_id, image=image_data)
+        return car
 
 class ApiSerializer(serializers.ModelSerializer):
-    images = ApiImagesSerializer(many=True, read_only=True)
+    cars = CarSerializer(many=True, read_only=True)
 
     class Meta:
         model = Api
-        fields = [
-            'id',
-            'original_video',
-            'labeld_video',
-            'count',
-            'tracklet',
-            'vehicle',
-            'images',
-            'upload_at',
-        ]
-    
-    def create(self, validated_data):
-        images_data = self.context['request'].FILES
-        api = Api.objects.create(**validated_data)
-        for image_data in images_data.getlist('image'):
-            ApiImages.objects.create(api=api, image=image_data)
-        return api
+        fields = ('id', 'original_video', 'labeld_video', 'count', 'tracklet', 'vehicle', 'cars')
 
-class ApiCreateSerializer(serializers.ModelSerializer):
-    images = ApiImagesSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Api
-        fields = [
-            'original_video',
-        ]
-    
-    def create(self, validated_data):
-        images_data = self.context['request'].FILES
-        api = Api.objects.create(**validated_data)
-        for image_data in images_data.getlist('image'):
-            ApiImages.objects.create(api=api, image=image_data)
-        return api
+#자식 테이블에서 부모 테이블 참조하기
+#https://076923.github.io/posts/Python-Django-11/

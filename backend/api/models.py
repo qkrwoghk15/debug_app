@@ -14,38 +14,58 @@ $ pip install django-imagekit
 # pip 설치 후, settings.INSTALLED_APPS에 imagekit 추가 필요
 '''
 # Create your models here.
-def get_txt_file(video_file, which):
-    file_name = video_file + which
-    with open(file_name, 'w', encoding='utf-8') as txtfile:
+def get_txt_file(video_name, which):
+    path = settings.MEDIA_ROOT+'/text/'+ video_name + which
+    with open(path, 'w', encoding='utf-8') as txtfile:
         for i in range(1, 11):
             data = f'{i}번째 줄입니다.\n'
             txtfile.write(data)
-    return file_name
+    # with open('test.txt', encoding='utf-8') as txtfile:
+    #     for row in txtfile.readlines():
+    #         print(row, end='')
+    #csv 읽기 쓰기 ## https://inoru.tistory.com/51?category=780478
+    return path
 
-def get_image_filename(instance, filename):
+def get_image_filename(instance):
     id = instance.api.id
     return "images/%s" % (id) 
 
 class Api(models.Model):
-    original_video = models.CharField(max_length=100, null = False, default='')
-    #labeld_video = models.FileField(upload_to='video/', blank = True, default=None)
-    #count = models.FileField(upload_to='text/', null = True, blank = True,  default=None)
-    #tracklet = models.FileField(upload_to='text/', null = True, blank = True, default = get_txt_file (settings.MEDIA_ROOT,'/text/_tracklet.txt'))
-    #vehicle = models.FileField(upload_to='text/', null = True, blank = True, default = get_txt_file(settings.MEDIA_ROOT, '/text/_vehicle.txt'))
-    upload_at = models.DateTimeField(auto_now_add=True)
-
-    #def video_file_name(self):
-    #    return os.path.basename(self.original_video.name)
+    original_video = models.FileField(upload_to='video/', default=None)
+    labeld_video = models.FileField(upload_to='video/', blank = True, default=None)
+    count =  models.CharField(max_length=100, null=True, blank=True)
+    tracklet = models.CharField(max_length=100, null=True, blank=True)
+    vehicle = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         """A string representation of the model."""
-        return str(self.original_video) + '_' + str(self.upload_at)
+        return str(self.original_video) + '_' + str(self.id)
 
-class ApiImages(models.Model):
-    api = models.ForeignKey(Api, blank=True, null=True, on_delete=models.CASCADE)
+    def save(self, *args, **kwargs):
+        self.count = get_txt_file(str(self.original_video).split('.')[0], '_count.txt')
+        self.tracklet = get_txt_file(str(self.original_video).split('.')[0], '_tracklet.txt')
+        self.vehicle = get_txt_file(str(self.original_video).split('.')[0], '_vehicle.txt')
+        super().save(*args, **kwargs)
+
+class Car(models.Model):
+    car_id = models.IntegerField(primary_key=True)
+    api = models.ForeignKey(Api, related_name="cars", on_delete=models.CASCADE, db_column="api")
+    begin_frame = models.IntegerField()
+    exit_frame = models.IntegerField()
+    car_type = models.IntegerField()
+
+class CarImages(models.Model):
+    car_id = models.ForeignKey(Car, related_name="images", on_delete=models.CASCADE, db_column="car_id")
+    frame = models.IntegerField()
+    x = models.IntegerField()
+    y = models.IntegerField()
+    width = models.IntegerField()
+    height = models.IntegerField()
+    car_type = models.IntegerField()
+    confidence = models.DecimalField(max_digits=5, decimal_places=2)
     image = ProcessedImageField(
         upload_to=get_image_filename,
-        processors = [Thumbnail(100, 100)],
+        processors = [Thumbnail(224, 224)],
         format = 'JPEG',
         options = {'quality': 60},
         null = True,
@@ -54,3 +74,4 @@ class ApiImages(models.Model):
 @receiver(post_delete, sender=Api)
 def file_delete_action(sender, instance, **kwargs):
     instance.original_video.delete(False)
+    instance.labeld_video.delete(False)
