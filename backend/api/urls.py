@@ -9,6 +9,10 @@ urlpatterns = [
     path('create/', views.CreateApi.as_view()),
     path('<int:pk>/', views.DetailApi.as_view()),
     path('<int:pk>/update/', views.UpdateApi.as_view()),
-    url('cars', views.CarViewSet.as_view({'get':'list', 'post':'create'})),
-    url('carimages', views.CarImagesViewSet.as_view({'get':'list', 'post':'create'})),
+
+    path('<int:api_pk>/cars/', views.CarViewSet.as_view({'get':'list', 'post':'create'})),
+    path('<int:api_pk>/cars/<int:car_pk>/', views.DetailCar.as_view()),
+
+    url('carimages/', views.CarImageViewSet.as_view({'get':'list', 'post':'create'})),
+    url('<int:pk>/carimages/<int:pk>/', views.DetailCarImage.as_view()),
 ]

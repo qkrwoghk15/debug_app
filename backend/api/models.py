@@ -1,7 +1,6 @@
 from django.db import models
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
-from django.db.models.signals import post_delete
 from django.dispatch import receiver
 import os
 from django.conf import settings
@@ -36,6 +35,7 @@ class Api(models.Model):
     count =  models.CharField(max_length=100, null=True, blank=True)
     tracklet = models.CharField(max_length=100, null=True, blank=True)
     vehicle = models.CharField(max_length=100, null=True, blank=True)
+    num_of_cars = models.IntegerField(default=0)
 
     def __str__(self):
         """A string representation of the model."""
@@ -54,7 +54,14 @@ class Car(models.Model):
     exit_frame = models.IntegerField()
     car_type = models.IntegerField()
 
-class CarImages(models.Model):
+    def save(self, *args, **kwargs):
+        self.car_id = 1
+        self.bgin_frame=1
+        self.exit_frame = 1
+        self.car_type = 1
+        super().save(*args, **kwargs)
+
+class CarImage(models.Model):
     car_id = models.ForeignKey(Car, related_name="images", on_delete=models.CASCADE, db_column="car_id")
     frame = models.IntegerField()
     x = models.IntegerField()
@@ -70,8 +77,3 @@ class CarImages(models.Model):
         options = {'quality': 60},
         null = True,
         verbose_name='Image')
-
-@receiver(post_delete, sender=Api)
-def file_delete_action(sender, instance, **kwargs):
-    instance.original_video.delete(False)
-    instance.labeld_video.delete(False)
