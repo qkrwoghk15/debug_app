@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from rest_framework import generics, viewsets
+from rest_framework import status, filters
 
 from .models import Api, Car, CarImage
 from .serializers import ApiSerializer, CarSerializer, CarImageSerializer
@@ -25,26 +26,55 @@ class UpdateApi(generics.UpdateAPIView):
 class CarViewSet(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        search = self.request.query_params.get('api', None)
+        if search:
+            queryset = queryset.filter(api=search)
+
+        return queryset
 
 class DetailCar(generics.RetrieveUpdateDestroyAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        search = self.request.query_params.get('api', None)
+        if search:
+            queryset = queryset.filter(api=search)
+
+        return queryset
+
 class CarImageViewSet(viewsets.ModelViewSet):
     queryset = CarImage.objects.all()
     serializer_class = CarImageSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        search = self.request.query_params.get('car', None)
+        if search:
+            queryset = queryset.filter(car_id=search)
+
+        return queryset
 
 class DetailCarImage(generics.RetrieveUpdateDestroyAPIView):
     queryset = CarImage.objects.all()
     serializer_class = CarImageSerializer
 
-def api_detail(request, api_pk):
-    api = get_object_or_404(Api, api_pk=id)
-    return render(request, 'api/api_detail.html', {'api': api})
+    def get_queryset(self):
+        queryset = super().get_queryset()
 
-def car_detail(request, car_pk):
-    car = get_object_or_404(Car, car_pk=car_id)
-    return render(request, 'car/car_detail.html', {'car': car})    
+        search = self.request.query_params.get('car', None)
+        if search:
+            queryset = queryset.filter(car_id=search)
+
+        return queryset
+
 # Form
 # https://www.bogotobogo.com/python/Django/Python_Django_Image_Files_Uploading_Example.php
 
