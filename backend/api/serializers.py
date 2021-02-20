@@ -12,25 +12,25 @@ class CarImageSerializer(serializers.ModelSerializer):
         return super(CarImageSerializer, self).to_representation(instance)
 
 class CarSerializer(serializers.ModelSerializer):
-    images = CarImageSerializer(many=True, read_only=True)
+    images = CarImageSerializer(many=True)
 
     class Meta:
         model = Car
         fields = ( 'car_id', 'api', 'begin_frame', 'exit_frame', 'car_type', 'images')
 
-    def create(self, validated_data):
+    '''def create(self, validated_data):
         images_data = self.context['request'].FILES
         car = Car.objects.create(**validated_data)
         for image_data in images_data.getlist('image'):
             CarImages.objects.create(car_id=car_id, image=image_data)
-        return car
+        return car'''
 
     def to_representation(self, instance):
         self.fields['api'] =  ApiRepresentationSerializer(read_only=True)
         return super(CarSerializer, self).to_representation(instance)
 
 class ApiSerializer(serializers.ModelSerializer):
-    cars = CarSerializer(many=True, read_only=True)
+    cars = CarSerializer(many=True)
 
     class Meta:
         model = Api
