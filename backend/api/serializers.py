@@ -8,7 +8,7 @@ class CarImageSerializer(serializers.ModelSerializer):
         fields = ('car_id', 'frame', 'x', 'y', 'width', 'height', 'car_type', 'confidence', 'image')
 
     def to_representation(self, instance):
-        self.fields['car_id'] =  CarRepresentationSerializer(read_only=True)
+        self.fields['car_id'] = CarRepresentationSerializer(read_only=True)
         return super(CarImageSerializer, self).to_representation(instance)
 
 class CarSerializer(serializers.ModelSerializer):
@@ -16,32 +16,25 @@ class CarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Car
-        fields = ( 'car_id', 'api', 'begin_frame', 'exit_frame', 'car_type', 'images')
-
-    '''def create(self, validated_data):
-        images_data = self.context['request'].FILES
-        car = Car.objects.create(**validated_data)
-        for image_data in images_data.getlist('image'):
-            CarImages.objects.create(car_id=car_id, image=image_data)
-        return car'''
+        fields = ('car_id', 'api', 'begin_frame', 'exit_frame', 'car_type', 'images')
 
     def to_representation(self, instance):
-        self.fields['api'] =  ApiRepresentationSerializer(read_only=True)
+        self.fields['api'] = ApiRepresentationSerializer(read_only=True)
         return super(CarSerializer, self).to_representation(instance)
 
 class ApiSerializer(serializers.ModelSerializer):
-    cars = CarSerializer(many=True)
+    cars = CarSerializer(many=True, read_only=True)
 
     class Meta:
         model = Api
-        fields = ('id', 'original_video', 'labeld_video', 'count', 'tracklet', 'vehicle', 'num_of_cars', 'cars')
+        fields = ('video_name', 'original_video', 'labeld_video', 'count', 'tracklet', 'vehicle', 'num_of_cars', 'cars')
 
 #자식 테이블에서 부모 테이블 참조하기
 #https://076923.github.io/posts/Python-Django-11/
 class ApiRepresentationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Api
-        fields = ('id', 'original_video', 'count', 'tracklet', 'vehicle', 'num_of_cars')
+        fields = ('video_name', 'original_video')
 
 class CarRepresentationSerializer(serializers.ModelSerializer):
     class Meta:

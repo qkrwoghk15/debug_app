@@ -7,12 +7,12 @@ from . import views
 urlpatterns = [
     path('', views.ListApi.as_view()),
     path('create/', views.CreateApi.as_view()),
-    path('<int:pk>/', views.DetailApi.as_view()),
-    path('<int:pk>/update/', views.UpdateApi.as_view()),
+    path('<pk>/', views.DetailApi.as_view()),
+    path('<pk>/update/', views.UpdateApi.as_view()),
 
     path('cars/', views.CarViewSet.as_view({'get':'list', 'post':'create'})),
-    path('cars/<int:pk>/', views.DetailCar.as_view()),
+    path('cars/<pk>/', views.DetailCar.as_view()),
 
     url('carimages/', views.CarImageViewSet.as_view({'get':'list', 'post':'create'})),
-    url('carimages/<int:pk>/', views.DetailCarImage.as_view()),
+    url('carimages/<pk>/', views.DetailCarImage.as_view()),
 ]

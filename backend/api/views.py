@@ -19,24 +19,6 @@ class CreateApi(generics.CreateAPIView):
     queryset = Api.objects.all()
     serializer_class = ApiSerializer
 
-    @login_decorator
-    def post(self,request):
-        data = json.loads(request.body)
-        try:
-            make = Style.objects.create(            # 만들자마자 make라는 변수에 style 객체 저장
-                description  = data['description'],
-                user_id      = request.user.id
-            )
-
-            for image in data['image_url_list']:
-                StyleImage.objects.create(
-                    image_url = image,
-                    style_id = make.id              # 스타일 id에 해당하는 변수의 아이디를 바로 불러와서 저장
-
-        except KeyError:
-            return JsonResponse({"message": "INVALID_KEYS"}, status = 400)
-        return HttpResponse(status = 200)
-
 class UpdateApi(generics.UpdateAPIView):
     queryset = Api.objects.all()
     serializer_class = ApiSerializer
