@@ -12,52 +12,65 @@ from django.dispatch import receiver
 import os
 from django.conf import settings #MEDIA_ROOT = os.path.join(BASE_DIR, 'upload')
 import csv
-
-def get_image():
-    print('i')
-    #video_name = models.CharField(primary_key=True, max_length=100) 
-
-def get_image_filename(instance):
-    id = instance.api.video_name
-    return "images/%s" % (id)
+import cv2
 
 def read_csv_file(video_name):
-    count_path = os.path.join(settings.MEDIA_ROOT, video_name + '_count.csv')
-    tracklet_path = os.path.join(settings.MEDIA_ROOT, video_name + '_tracklet.csv')
-    vehicle_path = os.path.join(settings.MEDIA_ROOT, video_name + '_vehicle.csv')
+    count_path = os.path.join(settings.MEDIA_ROOT, video_name + '_count.log')
+    tracklet_path = os.path.join(settings.MEDIA_ROOT, video_name + '_tracklet.log')
+    vehicle_path = os.path.join(settings.MEDIA_ROOT, video_name + '_vehicle.log')
 
     count = 0
-    with open(tracklet_path, encoding='utf-8') as csvfile:
-        csv_reader = csv.reader(csvfile, delimiter=',')
-        next(csv_reader)#header skip
-        for row in csv_reader:
+    with open(tracklet_path, encoding='utf-8') as txtfile:
+        for row in txtfile.readlines()[1:]:
             count+=1
 
     return count_path, tracklet_path, vehicle_path, count
 
-def create_Car_CarImages(api_pk):
-    api = Api.objects.get(video_name = api_pk)
-    with open(api.tracklet, encoding='utf-8') as csvfile:
-        csv_reader = csv.reader(csvfile, delimiter=',')
-        next(csv_reader)#header skip
-        for row in csv_reader:
-            ID, BeginFrame, ExitFrame, Type, _, _, _, _, _ = row
+def create_other_models(api_pk):
+    api = Api.objects.get(id = api_pk)
+
+    ''' SCENES '''
+    video_cap = cv2.VideoCapture(os.path.join(settings.MEDIA_ROOT, str(api.original_video)))
+    image_dir = os.path.join(settings.MEDIA_ROOT, 'images', str(api.original_video).split('.')[0])
+    if not os.path.isdir(image_dir):
+        os.mkdir(image_dir)
+    
+    vid_length = int(video_cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    for framenum in range(0, vid_length):
+        video_cap.set(cv2.CAP_PROP_FRAME_COUNT, framenum)
+        ret, image = video_cap.read()
+        if ret is False:
+            break
+
+        image_path = os.path.join(image_dir, str(framenum)+'.JPEG')
+        cv2.imwrite(image_path, image)
+        SceneImage.objects.create(api = api, frame = framenum, scene_image = image_path)
+    
+    video_cap.release()
+
+    ''' CARS '''
+    with open(api.tracklet, encoding='utf-8') as txtfile:
+        for row in txtfile.readlines()[1:]:
+            # ID,BeginFrame,ExitFrame,Type,Confidence,StartLineLabel,StartLineFrame,EndLineLabel,EndLineFrame, ? , ?
+            ID, BeginFrame, ExitFrame, Type, _, _, _, _, _, _, _ = row.strip().split(',')
             # create Cars List
             Car.objects.create(car_id=ID, api=api, begin_frame=BeginFrame, exit_frame=ExitFrame, car_type=Type)
 
-    with open(api.vehicle, encoding='utf-8') as csvfile:
-        csv_reader = csv.reader(csvfile, delimiter=',')
-        next(csv_reader)#header skip
-        for row in csv_reader:
-            ID, Frame, X, Y, W, H, Type, Confidence = row
-            # create Images each cars
-            #CarImage.objects.create(car_id = Car.objects.get(car_id=ID), frame=Frame, x=X, y=Y, width=W, height=H, car_type=Type, confidence=Confidnece, image=get_image)
+    ''' Car IMAGES '''
+    with open(api.vehicle, encoding='utf-8') as txtfile:
+        for row in txtfile.readlines()[1:]:
+            ID, Frame, X, Y, W, H, Type, Confidence = row.strip().split(',')
+            # create Image List each car
+            CarImage.objects.create(car_id = Car.objects.get(car_id=ID), 
+                                    frame=Frame, x=X, y=Y, width=W, height=H, 
+                                    car_type=Type, confidence=Confidence)
 
 # Create your models here.-
 class Api(models.Model):
-    video_name = models.CharField(max_length=100, primary_key = True, default='None')
+    # video_filename = models.CharField(max_length=100, primary_key = True, default='None')
     original_video = models.FileField(default=None)
     labeld_video = models.FileField(blank = True, default=None)
+    video_name =  models.CharField(max_length=100, null=True, blank=True)
     count =  models.CharField(max_length=100, null=True, blank=True)
     tracklet = models.CharField(max_length=100, null=True, blank=True)
     vehicle = models.CharField(max_length=100, null=True, blank=True)
@@ -68,10 +81,10 @@ class Api(models.Model):
         return str(self.original_video) + '_' + str(self.id)
 
     def save(self, *args, **kwargs):
-        self.video_name = str(self.original_video).split('.')[0]
-        self.count, self.tracklet, self.vehicle, self.num_of_cars = read_csv_file(self.video_name)
+        self.video_name = str(self.original_video)
+        self.count, self.tracklet, self.vehicle, self.num_of_cars = read_csv_file(str(self.original_video).split('.')[0])
         super().save(*args, **kwargs)
-        create_Car_CarImages(self.video_name)
+        create_other_models(self.id)
 
 class Car(models.Model):
     car_id = models.CharField(max_length=100, primary_key=True)
@@ -89,10 +102,15 @@ class CarImage(models.Model):
     height = models.IntegerField()
     car_type = models.CharField(max_length=100)
     confidence = models.DecimalField(max_digits=5, decimal_places=2)
-    image = ProcessedImageField(
-        upload_to=get_image_filename,
-        processors = [Thumbnail(224, 224)],
-        format = 'JPEG',
-        options = {'quality': 60},
-        null = True,
-        verbose_name='Image')
+    # image = ProcessedImageField(
+    #     upload_to=get_image_filename,
+    #     processors = [Thumbnail(224, 224)],
+    #     format = 'JPEG',
+    #     options = {'quality': 60},
+    #     null = True,
+    #     verbose_name='Image')
+
+class SceneImage(models.Model):
+    api = models.ForeignKey(Api, related_name='scenes', on_delete=models.CASCADE, db_column="api")
+    frame = models.IntegerField(primary_key=True)
+    scene_image = models.ImageField()

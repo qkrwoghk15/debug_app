@@ -15,4 +15,9 @@ urlpatterns = [
 
     url('carimages/', views.CarImageViewSet.as_view({'get':'list', 'post':'create'})),
     url('carimages/<pk>/', views.DetailCarImage.as_view()),
+
+    path('scenes/', views.SceneViewSet.as_view({'get':'list', 'post':'create'})),
+    path('scenes/<pk>/', views.DetailScene.as_view()),
+
+    path('<video>/frame=<frame>', views.GetFrameImage.as_view()),
 ]

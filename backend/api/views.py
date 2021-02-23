@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-
+from django.db.models import Q
 # Create your views here.
 from rest_framework import generics, viewsets
 from rest_framework import status, filters
 
-from .models import Api, Car, CarImage
-from .serializers import ApiSerializer, CarSerializer, CarImageSerializer
+from .models import Api, Car, CarImage, SceneImage
+from .serializers import ApiSerializer, CarSerializer, CarImageSerializer, SceneImageSerializer
 
+'''Api'''
 class ListApi(generics.ListCreateAPIView):
     queryset = Api.objects.all()
     serializer_class = ApiSerializer
@@ -23,6 +24,7 @@ class UpdateApi(generics.UpdateAPIView):
     queryset = Api.objects.all()
     serializer_class = ApiSerializer
 
+'''Car'''
 class CarViewSet(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
@@ -49,6 +51,7 @@ class DetailCar(generics.RetrieveUpdateDestroyAPIView):
 
         return queryset
 
+'''CarImage'''
 class CarImageViewSet(viewsets.ModelViewSet):
     queryset = CarImage.objects.all()
     serializer_class = CarImageSerializer
@@ -75,8 +78,52 @@ class DetailCarImage(generics.RetrieveUpdateDestroyAPIView):
 
         return queryset
 
+'''Scene'''
+class SceneViewSet(viewsets.ModelViewSet):
+    queryset = SceneImage.objects.all()
+    serializer_class = SceneImageSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        search = self.request.query_params.get('car', None)
+        if search:
+            queryset = queryset.filter(car_id=search)
+
+        return queryset
+
+class DetailScene(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SceneImage.objects.all()
+    serializer_class = SceneImageSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        search = self.request.query_params.get('car', None)
+        if search:
+            queryset = queryset.filter(car_id=search)
+
+        return queryset
+
 # Form
 # https://www.bogotobogo.com/python/Django/Python_Django_Image_Files_Uploading_Example.php
 
 #CharField
 #https://www.valentinog.com/blog/drf/
+
+class GetFrameImage(generics.ListCreateAPIView):
+    queryset = SceneImage.objects.all()
+    serializer_class = SceneImageSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = SceneImage.objects.filter(api = Api.objects.get(video_name = self.kwargs['video']), frame = self.kwargs['frame'])
+        return queryset
+
+class GetFrameImage(generics.ListCreateAPIView):
+    queryset = SceneImage.objects.all()
+    serializer_class = SceneImageSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = SceneImage.objects.filter(api = Api.objects.get(video_name = self.kwargs['video']), frame = self.kwargs['frame'])

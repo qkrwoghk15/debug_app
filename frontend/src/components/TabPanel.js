@@ -6,6 +6,9 @@ import Car from "./Car";
 
 import { ApiList } from '../api/api';
 
+//movie image slider
+//https://codepen.io/ryasan86/pen/ExKRgZx 
+
 class TabPanel extends React.Component {
     state = {
         isLoading: true,
@@ -18,13 +21,14 @@ class TabPanel extends React.Component {
     };
 
     async componentDidMount() {
-        this._getCars();
+        if(this.props.value === this.props.index)
+            this._getCars();
     }
 
     render() {
         const { children, value, index, ...other } = this.props;
         const { isLoading, cars } = this.state;
-        
+
         return (
         <div
             role="tabpanel"

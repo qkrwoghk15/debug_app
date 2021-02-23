@@ -17,7 +17,7 @@ function Car({ id, year, title, summary, poster}) {
               </li>
             ))}
           </ul> */}
-          <p className="car__summary">{summary.slice(0, 180)}...</p>
+          {/* <p className="car__summary">{summary.slice(0, 180)}...</p> */}
         </div>
     </div>
   );
