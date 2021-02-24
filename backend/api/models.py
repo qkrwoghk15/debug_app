@@ -31,7 +31,11 @@ def create_other_models(api_pk):
 
     ''' SCENES '''
     video_cap = cv2.VideoCapture(os.path.join(settings.MEDIA_ROOT, str(api.original_video)))
-    image_dir = os.path.join(settings.MEDIA_ROOT, 'images', str(api.original_video).split('.')[0])
+    image_dir = os.path.join(settings.MEDIA_ROOT, 'images')
+    if not os.path.isdir(image_dir):
+        os.mkdir(image_dir)
+
+    image_dir = os.path.join(image_dir, str(api.original_video).split('.')[0])
     if not os.path.isdir(image_dir):
         os.mkdir(image_dir)
     
@@ -52,7 +56,7 @@ def create_other_models(api_pk):
     with open(api.tracklet, encoding='utf-8') as txtfile:
         for row in txtfile.readlines()[1:]:
             # ID,BeginFrame,ExitFrame,Type,Confidence,StartLineLabel,StartLineFrame,EndLineLabel,EndLineFrame, ? , ?
-            ID, BeginFrame, ExitFrame, Type, _, _, _, _, _, _, _ = row.strip().split(',')
+            ID, BeginFrame, ExitFrame, Type = row.strip().split(',')[:4]
             # create Cars List
             Car.objects.create(car_id=ID, api=api, begin_frame=BeginFrame, exit_frame=ExitFrame, car_type=Type)
 

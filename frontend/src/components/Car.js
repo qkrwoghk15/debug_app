@@ -21,12 +21,22 @@ class Car extends React.Component {
     },
     modalOpen: false,
     detected: '',
-    outlier: {'car_1':[],
-              'bus_2':[],
-              'bus_3':[],
-              'trk_4':[],
-              'trk_5':[],
-              'trk_6':[]},
+    outlier_num: {
+      'car_1':0,
+      'bus_2':0,
+      'bus_3':0,
+      'trk_4':0,
+      'trk_5':0,
+      'trk_6':0,
+    },
+    outlierMsg: '',
+    totalOutlier: 0,
+    car_1:[],
+    bus_2:[],
+    bus_3:[],
+    trk_4:[],
+    trk_5:[],
+    trk_6:[],
     g: 255,
     b: 255,
   }
@@ -53,21 +63,51 @@ class Car extends React.Component {
   _findOutlier = () =>{
     this.props.images.map((data, index) => (
       this.setState((state)=>{
-        return {outlier: this.state.outlier[data.car_type].push(data.frame)}
+        switch (data.car_type){
+          case 'car_1':
+            state.car_1.push(data.frame)
+            state.outlier_num['car_1'] += 1
+            break;
+          case 'bus_2':
+            state.bus_2.push(data.frame)
+            state.outlier_num['bus_2'] += 1
+            break;
+          case 'bus_3':
+            state.bus_3.push(data.frame)
+            state.outlier_num['bus_3'] += 1
+            break;
+          case 'trk_4':
+            state.trk_4.push(data.frame)
+            state.outlier_num['trk_4'] += 1
+            break;
+          case 'trk_5':
+            state.trk_5.push(data.frame)
+            state.outlier_num['trk_5'] += 1
+            break;
+          case 'trk_6':
+            state.trk_6.push(data.frame)
+            state.outlier_num['trk_6'] += 1
+            break;
+          default:
+            break;
+        }
       })
     ))
-    console.log(this.state.outlier)
-    //this.setState({outlier: `${this.props.images.length}`})
+  }
+
+  _setOutlierMsg = () => {
+    this.setState({outlierMsg: 'no outlier', totalOutlier: 2, g:200, b: 200})
   }
 
   componentDidMount(){
     this._getImages();
     this._countDetected();
     this._findOutlier();
+    this._setOutlierMsg();
   }
 
   render(){
-    const { src, modalOpen, detected, outlier, g, b } = this.state
+    const { src, modalOpen, detected, outlierMsg, g, b } = this.state
     const { id, frames, images } = this.props
 
     return (
@@ -95,9 +135,13 @@ class Car extends React.Component {
           <div className="car__data">
             <h3 className="car__title">{`Car ID <${id}>`}</h3>
             <h5 className="car__detected">{detected}</h5>
-            {
-              
-            }
+            <p className="car__summary">{outlierMsg.slice(0, 180)}</p>
+            {/* {(type === 'car_1')?(<p className="car__summary"></p>):((outlier_num['car_1']===0)?(<p className="car__summary"></p>):(<p className="car__summary">car_1: {outlier_num['car_1']}</p>))}
+            {(type === 'bus_2')?(<p className="car__summary"></p>):((outlier_num['bus_2']===0)?(<p className="car__summary"></p>):(<p className="car__summary">bus_2: {outlier_num['bus_2']}</p>))}
+            {(type === 'bus_3')?(<p className="car__summary"></p>):((outlier_num['bus_3']===0)?(<p className="car__summary"></p>):(<p className="car__summary">bus_3: {outlier_num['bus_3']}</p>))}
+            {(type === 'trk_4')?(<p className="car__summary"></p>):((outlier_num['trk_4']===0)?(<p className="car__summary"></p>):(<p className="car__summary">trk_4: {outlier_num['trk_4']}</p>))}
+            {(type === 'trk_5')?(<p className="car__summary"></p>):((outlier_num['trk_5']===0)?(<p className="car__summary"></p>):(<p className="car__summary">trk_5: {outlier_num['trk_5']}</p>))}
+            {(type === 'trk_6')?(<p className="car__summary"></p>):((outlier_num['trk_6']===0)?(<p className="car__summary"></p>):(<p className="car__summary">trk_6: {outlier_num['trk_6']}</p>))} */}
             <p className="car__summary">frame: {frames.slice(0, 180)}</p>
           </div>
       </div>
