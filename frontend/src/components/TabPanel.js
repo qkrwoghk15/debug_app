@@ -4,31 +4,10 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Car from "./Car";
 
-import { ApiList } from '../api/api';
-
-//movie image slider
-//https://codepen.io/ryasan86/pen/ExKRgZx 
-
 class TabPanel extends React.Component {
-    state = {
-        isLoading: true,
-        cars: [],
-    };
-
-    _getCars = async () => {
-        const {data} = await ApiList()
-        this.setState({ cars: data, isLoading: false });
-    };
-
-    async componentDidMount() {
-        if(this.props.value === this.props.index)
-            this._getCars();
-    }
-
     render() {
-        const { children, value, index, ...other } = this.props;
-        const { isLoading, cars } = this.state;
-
+        const { children, value, fileName, cars, isLoading, index, ...other } = this.props;
+        
         return (
         <div
             role="tabpanel"
@@ -43,22 +22,32 @@ class TabPanel extends React.Component {
                     <Typography>{children}</Typography>
                     <section className="container">
                         {isLoading ? (
-                        <div className="loader">
-                            <span className="loader__text">Loading...</span>
-                        </div>
+                            (fileName === '') ? (
+                                <div className="loader">
+                                    <span className="loader__text">
+                                        <h1>Upload Video File...</h1>
+                                    </span>
+                                </div>
+                            ) : (
+                                <div className="loader">
+                                    <span className="loader__text">
+                                        <h1>Loading...</h1>
+                                    </span>
+                                </div>
+                            )
                         ) : (
-                        <div className="cars">
-                            {cars.map(car => 
-                                <Car
-                                    key={car.id}
-                                    id={car.id}
-                                    year="2021"
-                                    title = {car.original_video}
-                                    summary = {car.upload_at}
-                                    poster = {car.frameImgs}
-                                />
-                            )}
-                        </div>
+                            <div className="cars">
+                                {cars.map(car => 
+                                    <Car
+                                        key={car.id}
+                                        videoName = {fileName}
+                                        id={car.car_id}
+                                        type = {car.car_type}
+                                        frames = {`${car.begin_frame} - ${car.exit_frame}`}
+                                        images = {car.images}
+                                    />
+                                )}
+                            </div>
                         )}
                     </section>
                 </Box>

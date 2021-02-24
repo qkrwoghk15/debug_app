@@ -4,24 +4,18 @@ import TabPanel from "./TabPanel"
 class Contents extends React.Component {
     render(){
         return (
-            <div style={{marginTop:'140px', padding:'10px'}}>            
-                <TabPanel value={this.props.value} index={0}>
-                    {/* Item One */}
+            <div style={{height:'100%', marginTop:'140px', padding:'10px'}}>            
+                <TabPanel value={this.props.value} fileName={this.props.fileName} cars={this.props.cars} isLoading={this.props.isLoading} index={0}>
                 </TabPanel>
-                <TabPanel value={this.props.value} index={1}>
-                    {/* Item Two */}
+                <TabPanel value={this.props.value} fileName={this.props.fileName} cars={this.props.cars} isLoading={this.props.isLoading} index={1}>
                 </TabPanel>
-                <TabPanel value={this.props.value} index={2}>
-                    {/* Item Three */}
+                <TabPanel value={this.props.value} fileName={this.props.fileName} cars={this.props.cars} isLoading={this.props.isLoading} index={2}>
                 </TabPanel>
-                <TabPanel value={this.props.value} index={3}>
-                    {/* Item Three */}
+                <TabPanel value={this.props.value} fileName={this.props.fileName} cars={this.props.cars} isLoading={this.props.isLoading} index={3}>
                 </TabPanel>
-                <TabPanel value={this.props.value} index={4}>
-                    {/* Item Three */}
+                <TabPanel value={this.props.value} fileName={this.props.fileName} cars={this.props.cars} isLoading={this.props.isLoading} index={4}>
                 </TabPanel>
-                <TabPanel value={this.props.value} index={5}>
-                    {/* Item Three */}
+                <TabPanel value={this.props.value} fileName={this.props.fileName} cars={this.props.cars} isLoading={this.props.isLoading} index={5}>
                 </TabPanel>
             </div>
         );

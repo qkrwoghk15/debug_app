@@ -20,4 +20,5 @@ urlpatterns = [
     path('scenes/<pk>/', views.DetailScene.as_view()),
 
     path('<video>/frame=<frame>', views.GetFrameImage.as_view()),
+    path('<video>/type=<type>', views.GetCarbyType.as_view()),
 ]

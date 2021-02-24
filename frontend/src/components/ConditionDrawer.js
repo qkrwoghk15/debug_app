@@ -68,7 +68,7 @@ class ConditionDrawer extends React.Component{
     render(){
         const { classes } = this.props;
         const { expanded } = this.state;
-        console.log(this.props.video)
+        
         return(
             <div className={classes.root}>
                 <Accordion defaultExpanded expanded = {expanded === 'panel1'} onChange={this.handleChange('panel1')}>

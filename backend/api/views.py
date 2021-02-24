@@ -120,10 +120,21 @@ class GetFrameImage(generics.ListCreateAPIView):
         queryset = SceneImage.objects.filter(api = Api.objects.get(video_name = self.kwargs['video']), frame = self.kwargs['frame'])
         return queryset
 
-class GetFrameImage(generics.ListCreateAPIView):
-    queryset = SceneImage.objects.all()
-    serializer_class = SceneImageSerializer
+class GetCarbyType(generics.ListCreateAPIView):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = SceneImage.objects.filter(api = Api.objects.get(video_name = self.kwargs['video']), frame = self.kwargs['frame'])
+
+        type_num = int(self.kwargs['type'])
+        if type_num == 0: type = 'car_1'
+        elif type_num == 1: type = 'bus_2'
+        elif type_num == 2: type = 'bus_3'
+        elif type_num == 3: type = 'trk_4'
+        elif type_num == 4: type = 'trk_5'
+        elif type_num == 5: type = 'trk_6'
+        
+        queryset = Car.objects.filter(api = Api.objects.get(video_name = self.kwargs['video']), car_type = type)
+        return queryset
+

@@ -24,7 +24,6 @@ import {
 } from '@material-ui/icons';
 import ConditionDrawer from "./ConditionDrawer"
 import CustomizedTabs from "./CustomizedTabs"
-import { ApiCreate } from '../api/api';
 
 const styles = (theme) => ({
     root: {
@@ -107,13 +106,14 @@ ScrollTop.propTypes = {
 
 class TitleBar extends React.Component {
     state = {
-        fileName: '',
+        //fileName: '',
         drawerOpen: false,
     }
     handleChange = (e) => {
-        this.setState({
-            fileName: e.target.value.split('\\').slice(-1)
-        })
+        this.props.uploadFile(e)
+        //this.setState({
+        //    fileName: e.target.value.split('\\').slice(-1)
+        //})
         //ApiCreate(this.state.fileName)
     }
     handleToggleDrawer = (open) => (e) => {
@@ -152,8 +152,8 @@ class TitleBar extends React.Component {
                                         />
                                         <InputBase
                                             className={classes.input}
-                                            placeholder={this.state.fileName === '' ? "Search Video File" : this.state.fileName}
-                                            inputProps={{ 'aria-label': 'Search Video File' }}
+                                            placeholder={this.props.fileName === '' ? "Upload Video File" : this.props.fileName}
+                                            inputProps={{ 'aria-label': 'Upload Video File' }}
                                             disabled = {true}
                                         />
                                         <Divider className={classes.divider} orientation="vertical" />

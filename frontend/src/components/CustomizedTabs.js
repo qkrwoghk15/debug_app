@@ -68,12 +68,12 @@ export default function CustomizedTabs(props) {
           aria-label="styled tabs"
           style={{width: `calc(${windowWidth}*0.6px)`}}
         >
-          <StyledTab label="car1" {...a11yProps(0)} />
-          <StyledTab label="car2" {...a11yProps(1)} />
-          <StyledTab label="car3" {...a11yProps(2)} />
-          <StyledTab label="car4" {...a11yProps(3)} />
-          <StyledTab label="car5" {...a11yProps(4)} />
-          <StyledTab label="car6" {...a11yProps(5)} />
+          <StyledTab label="car_1" {...a11yProps(0)} />
+          <StyledTab label="bus_2" {...a11yProps(1)} />
+          <StyledTab label="bus_3" {...a11yProps(2)} />
+          <StyledTab label="trk_4" {...a11yProps(3)} />
+          <StyledTab label="trk_5" {...a11yProps(4)} />
+          <StyledTab label="trk_6" {...a11yProps(5)} />
         </StyledTabs>
     </div>
   );

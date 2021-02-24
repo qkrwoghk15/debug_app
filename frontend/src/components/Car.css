@@ -1,5 +1,7 @@
 .cars .car {
   background-color: white;
+  width: 25%;
+  margin-right: 50px;
   margin-bottom: 70px;
   font-weight: 300;
   padding: 20px;
@@ -17,10 +19,21 @@
   color: inherit;
 }
 
+
 .car img {
   position: relative;
-  top: -50px;
-  max-width: 150px;
+  top: -40px;
+  max-width: 400px;
+  width: 100%;
+  margin-right: 30px;
+  box-shadow: 0 10px 10px -12px rgba(50, 50, 93, 0.25),
+    0 10px 10px -18px rgba(0, 0, 0, 0.3), 0 -10px 10px -8px rgba(0, 0, 0, 0.025);
+}
+
+.car__image {
+  position: relative;
+  top: -40px;
+  max-width: 400px;
   width: 100%;
   margin-right: 30px;
   box-shadow: 0 10px 10px -12px rgba(50, 50, 93, 0.25),
@@ -39,7 +52,7 @@
   color: #2c2c2c;
 }
 
-.car .car__genres {
+.car .car__descript {
   list-style: none;
   padding: 0;
   margin: 0;
